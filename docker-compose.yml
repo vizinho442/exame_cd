@@ -1,0 +1,13 @@
+﻿version: "3.8"
+services:
+  web:
+    build: .
+    image: dashboard-frontend:latest
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: exemplo
