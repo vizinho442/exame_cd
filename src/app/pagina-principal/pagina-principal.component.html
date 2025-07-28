@@ -1,0 +1,110 @@
+<div class="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
+
+  <header class="flex flex-col sm:flex-row justify-between items-center p-6 bg-gray-50 dark:bg-gray-800 shadow-md">
+    <h1 class="text-3xl font-bold mb-4 sm:mb-0">ArVisão Meteorológica</h1>
+    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-center">
+      <select [(ngModel)]="city" (change)="onSearch()"
+              class="border px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+        <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
+      </select>
+      <button (click)="onSearch()"
+              class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Pesquisar
+      </button>
+      <button (click)="toggleDark()"
+              class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-5 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
+        Modo {{ isDarkMode ? 'Claro' : 'Escuro' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="flex justify-center sm:justify-end space-x-2 sm:space-x-4 px-6 mt-4 mb-6">
+    <button (click)="changeLayer('precipitation')"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+            [ngClass]="{'bg-blue-600 text-white shadow-md': currentLayer === 'precipitation', 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600': currentLayer !== 'precipitation'}">
+      Precipitação
+    </button>
+    <button (click)="changeLayer('pressure')"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+            [ngClass]="{'bg-blue-600 text-white shadow-md': currentLayer === 'pressure', 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600': currentLayer !== 'pressure'}">
+      Pressão
+    </button>
+    <button (click)="changeLayer('aqi')"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300"
+            [ngClass]="{'bg-blue-600 text-white shadow-md': currentLayer === 'aqi', 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600': currentLayer !== 'aqi'}">
+      Qualidade do Ar
+    </button>
+  </div>
+
+  <div class="flex flex-col md:flex-row mx-6 my-4 gap-6">
+    <div class="relative w-full md:w-2/3 h-96 rounded-lg overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+      <div #mapElement class="absolute inset-0"></div>
+      <div *ngIf="loading"
+           class="absolute inset-0 flex items-center justify-center bg-white dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75 z-10 text-black dark:text-white">
+        <div class="loader mr-2"></div>
+        <span>A carregar dados…</span>
+      </div>
+    </div>
+
+    <section *ngIf="currentWeather && !loading"
+             class="w-full md:w-1/3 bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col justify-center items-center text-center">
+      <h2 class="text-2xl font-semibold mb-4 text-center">Condições em {{ city }}</h2>
+      <img [src]="getWeatherIcon(currentWeather.weather[0].icon)" alt="Weather icon" class="w-24 h-24 mb-2 animate-fade-in">
+      <div class="text-6xl font-bold mb-2 text-blue-600 dark:text-blue-400">
+        {{ currentWeather.main.temp | number:'1.0-0' }}°C
+      </div>
+      <div class="text-xl font-medium mb-4 capitalize">
+        {{ currentWeather.weather[0].description }}
+      </div>
+      <div class="grid grid-cols-2 gap-y-2 text-lg w-full">
+        <div class="flex justify-between items-center col-span-2 px-4 py-1 border-b border-gray-200 dark:border-gray-700">
+          <span>Sensação térmica:</span>
+          <strong class="text-xl">{{ currentWeather.main.feels_like | number:'1.0-0' }}°C</strong>
+        </div>
+        <div class="flex justify-between items-center col-span-2 px-4 py-1 border-b border-gray-200 dark:border-gray-700">
+          <span>Humidade:</span>
+          <strong class="text-xl">{{ currentWeather.main.humidity }}%</strong>
+        </div>
+        <div class="flex justify-between items-center col-span-2 px-4 py-1 border-b border-gray-200 dark:border-gray-700">
+          <span>Vento:</span>
+          <strong class="text-xl">{{ currentWeather.wind.speed | number:'1.0-0' }} m/s</strong>
+        </div>
+        <div class="flex justify-between items-center col-span-2 px-4 py-1">
+          <span>Pressão:</span>
+          <strong class="text-xl">{{ currentWeather.main.pressure }} hPa</strong>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section *ngIf="forecastData && forecastData.list.length > 0 && !loading" class="px-6 mb-6">
+    <h2 class="text-2xl font-semibold mb-4">Previsão Horária</h2>
+    <div class="flex overflow-x-auto pb-4 -mx-2 scrollbar-hide"> <div *ngFor="let item of forecastData.list.slice(0, 8)"
+           class="flex-shrink-0 w-32 p-4 mx-2 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md text-center flex flex-col items-center justify-between animate-fade-in">
+        <div class="font-bold text-lg mb-1 text-gray-700 dark:text-gray-300">{{ (item.dt * 1000) | date:'HH:mm' }}</div>
+        <img [src]="getWeatherIcon(item.weather[0].icon)" alt="Weather icon" class="w-16 h-16">
+        <div class="text-3xl font-bold mt-2 text-blue-600 dark:text-blue-400">{{ item.main.temp | number:'1.0-0' }}°C</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Sens. térmica: {{ item.main.feels_like | number:'1.0-0' }}°C</div>
+        <div class="text-sm mt-1 text-gray-600 dark:text-gray-400">Humidade: {{ item.main.humidity }}%</div>
+        <div *ngIf="item.pop > 0" class="text-sm text-blue-500 font-medium mt-1">
+          Precip: {{ (item.pop * 100) | number:'1.0-0' }}%
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="aqiStations.length > 0 && !loading" class="px-6 mb-6 animate-fade-in">
+    <h2 class="text-2xl font-semibold mb-4">Dados de Qualidade do Ar (AQI)</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div *ngFor="let st of aqiStations" class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
+        <div class="font-medium mb-1 text-gray-700 dark:text-gray-300">{{ st.station.name }}</div>
+        <div class="text-4xl font-bold"
+             [ngClass]="getAqiColorClass(st.aqi)">
+          {{ st.aqi }}
+        </div>
+        <div class="text-sm mt-1 text-gray-600 dark:text-gray-400">{{ getAqiDescription(st.aqi) }}</div>
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,36 @@
+@if (errorMessage) {
+<div>{{ errorMessage }}</div>
+}
+<div class="estrelas"></div>
+
+<!-- Wrapper que centraliza tudo -->
+<div class="wrapper">
+  <div class="formulario">
+    <h1>Registar</h1>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="caixa-formulario">
+        <input type="text" placeholder="Username" formControlName="username" required/>
+      </div>
+
+      <!-- Campo Usuário -->
+      <div class="caixa-formulario">
+        <input type="email" placeholder="Email" formControlName="email" required/>
+      </div>
+
+      <!-- Campo Senha -->
+      <div class="caixa-formulario">
+        <input type="password" placeholder="Palavra-Passe" formControlName="password" required />
+      </div>
+
+
+      <!-- Botão Entrar -->
+      <button type="submit" [disabled]="form.invalid">Registar</button>
+
+      <!-- Link Registrar -->
+      <p class="link-registro">
+        Já tem conta? <a href="/login">Entrar</a>
+      </p>
+    </form>
+  </div>
+</div>

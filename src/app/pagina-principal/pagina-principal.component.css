@@ -1,0 +1,524 @@
+/* Variáveis CSS para o tema claro/escuro */
+:root {
+  --background-color: #f0f2f5;
+  --card-background: #ffffff;
+  --text-color: #333;
+  --header-bg: #e0e2e6;
+  --button-bg: #007bff;
+  --button-text: #fff;
+  --button-hover-bg: #0056b3;
+  --border-color: #ddd;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --input-bg: #f9f9f9;
+  --input-border: #ccc;
+  --toggle-track: #ccc;
+  --toggle-thumb: #fff;
+  --spinner-color: #007bff;
+}
+
+body.dark-mode {
+  --background-color: #282c34;
+  --card-background: #3c414c;
+  --text-color: #e0e0e0;
+  --header-bg: #21252b;
+  --button-bg: #4CAF50; /* Green */
+  --button-text: #fff;
+  --button-hover-bg: #45a049;
+  --border-color: #555;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --input-bg: #32363e;
+  --input-border: #555;
+  --toggle-track: #555;
+  --toggle-thumb: #eee;
+  --spinner-color: #4CAF50;
+}
+
+/* Estilos Globais */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background-color: var(--header-bg);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.title-section h1 {
+  margin: 0;
+  font-size: 2.2em;
+  color: var(--text-color);
+}
+
+.search-and-toggle {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.search-bar {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.search-bar input {
+  padding: 10px 15px;
+  border: 1px solid var(--input-border);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-size: 1em;
+  outline: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.search-bar input::placeholder {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.search-bar button {
+  padding: 10px 15px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+}
+
+.search-bar button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1em;
+  color: var(--text-color);
+}
+
+.toggle-input {
+  display: none;
+}
+
+.toggle-label {
+  display: block;
+  width: 45px;
+  height: 25px;
+  background-color: var(--toggle-track);
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-label::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  background-color: var(--toggle-thumb);
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.toggle-input:checked + .toggle-label {
+  background-color: var(--button-bg);
+}
+
+.toggle-input:checked + .toggle-label::after {
+  transform: translateX(20px);
+}
+
+/* Área de Conteúdo Principal */
+.content-area {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  flex-grow: 1;
+}
+
+/* Secção do Mapa e Clima Atual */
+.map-weather-section {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  background-color: var(--card-background); /* Fundo para o mapa */
+}
+
+.map-container {
+  height: 600px; /* Altura do mapa */
+  width: 100%;
+  position: relative; /* Para o overlay e controls */
+  background-color: var(--background-color); /* Fallback para mapa */
+}
+
+/* Estilos Leaflet (garantir que são visíveis) */
+.leaflet-container {
+  background: var(--background-color); /* Para o fundo do mapa */
+  color: var(--text-color); /* Para textos Leaflet como copyright */
+}
+
+.map-controls {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 1000; /* Acima do mapa */
+  display: flex;
+  gap: 10px;
+  background-color: rgba(var(--card-background), 0.8);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.map-button {
+  padding: 8px 15px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s;
+}
+
+.map-button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.current-weather-card {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 999; /* Acima do mapa, abaixo dos controles */
+  background-color: rgba(var(--card-background), 0.9); /* Fundo semi-transparente */
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  color: var(--text-color);
+  max-width: 350px;
+  backdrop-filter: blur(5px); /* Efeito de blur para o fundo */
+  border: 1px solid var(--border-color);
+}
+
+.current-weather-card .city-name {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.current-weather-card .temp-big {
+  font-size: 3.5em;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--button-bg); /* Cor de destaque para a temperatura */
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+  font-size: 0.95em;
+}
+
+.details-grid div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.details-grid .value {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001; /* Acima de tudo */
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1.2em;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid var(--spinner-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Secção de Dados e Previsões (ABAixo do Mapa) */
+.data-forecast-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Layout responsivo */
+  gap: 20px;
+}
+
+.aqi-card,
+.chart-section,
+.hourly-forecast-card {
+  background-color: var(--card-background);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.aqi-card h2,
+.chart-section h2,
+.hourly-forecast-card h2 {
+  font-size: 1.6em;
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.aqi-list .aqi-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border-color);
+  font-size: 1em;
+}
+.aqi-list .aqi-item:last-child {
+  border-bottom: none;
+}
+
+.aqi-value {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #fff; /* Texto branco nos badges de AQI */
+}
+
+/* Cores dos badges AQI */
+.aqi-good { background-color: #28a745; } /* Green */
+.aqi-moderate { background-color: #ffc107; } /* Yellow */
+.aqi-unhealthy-sensitive { background-color: #fd7e14; } /* Orange */
+.aqi-unhealthy { background-color: #dc3545; } /* Red */
+.aqi-very-unhealthy { background-color: #6f42c1; } /* Purple */
+.aqi-hazardous { background-color: #6610f2; } /* Darker Purple */
+
+.chart-container {
+  position: relative;
+  height: 250px; /* Altura fixa para o gráfico */
+  width: 100%;
+}
+
+.hourly-forecast-card {
+  overflow-x: auto; /* Permite scroll horizontal se muitos itens */
+}
+
+.forecast-cards-container {
+  display: flex;
+  gap: 15px;
+  padding-bottom: 10px; /* Para acomodar a scrollbar */
+}
+
+.forecast-item {
+  flex: 0 0 90px; /* Tamanho fixo para cada item de previsão */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  font-size: 0.9em;
+  text-align: center;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.forecast-item .time {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.forecast-item .weather-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 5px;
+}
+
+.forecast-item .temp {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 3px;
+}
+
+.forecast-item .humidity {
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 1024px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .search-and-toggle {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .search-bar {
+    flex-grow: 1;
+  }
+  .search-bar input {
+    width: 100%;
+  }
+  .map-controls {
+    position: static; /* Move os controles para dentro do fluxo */
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+  .current-weather-card {
+    position: static; /* Remove a posição absoluta no mobile */
+    max-width: none;
+    margin: 20px; /* Adiciona margem */
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    padding: 15px;
+  }
+  .header {
+    padding: 10px 15px;
+  }
+  .title-section h1 {
+    font-size: 1.8em;
+  }
+  .search-bar {
+    flex-direction: column;
+    width: 100%;
+  }
+  .search-bar input,
+  .search-bar button {
+    border-radius: 8px; /* Arredonda tudo */
+    width: 100%;
+    border-right: 1px solid var(--input-border); /* Re-adiciona borda */
+  }
+  .search-bar input {
+    margin-bottom: 10px;
+  }
+  .map-container {
+    height: 400px;
+  }
+  .aqi-card h2,
+  .chart-section h2,
+  .hourly-forecast-card h2 {
+    font-size: 1.4em;
+  }
+  .data-forecast-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+.loader {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  /* Usar theme() aqui requer que este CSS seja processado pelo PostCSS/Tailwind */
+  /* Se tiver problemas, pode substituir por uma cor hexadecimal: #2563eb para blue-600 */
+  border-top: 4px solid theme('colors.blue.600');
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Dark Mode para o spinner */
+.dark .loader {
+  border-top: 4px solid theme('colors.blue.400');
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Opcional: Estilos para o scrollbar em navegadores Webkit (Chrome, Safari) */
+/* Pode precisar de um plugin Tailwind como 'tailwind-scrollbar-hide' para 'scrollbar-hide' */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: theme('colors.gray.200');
+  border-radius: 4px;
+}
+.dark .overflow-x-auto::-webkit-scrollbar-track {
+  background: theme('colors.gray.700');
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: theme('colors.gray.400');
+  border-radius: 4px;
+}
+.dark .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: theme('colors.gray.500');
+}
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.gray.500');
+}
+.dark .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.gray.400');
+}
